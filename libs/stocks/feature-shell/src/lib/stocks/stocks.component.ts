@@ -11,28 +11,35 @@ export class StocksComponent implements OnInit {
   stockPickerForm: FormGroup;
   symbol: string;
   period: string;
-
+  selectedValue: string;
   quotes$ = this.priceQuery.priceQueries$;
+  selectedSymbol$ = this.priceQuery.selectedSymbol$;
 
   timePeriods = [
-    { viewValue: 'All available data', value: 'max' },
-    { viewValue: 'Five years', value: '5y' },
-    { viewValue: 'Two years', value: '2y' },
-    { viewValue: 'One year', value: '1y' },
-    { viewValue: 'Year-to-date', value: 'ytd' },
-    { viewValue: 'Six months', value: '6m' },
-    { viewValue: 'Three months', value: '3m' },
-    { viewValue: 'One month', value: '1m' }
+    { viewValue: 'Max', value: 'max' },
+    { viewValue: '5Y', value: '5y' },
+    { viewValue: '2Y', value: '2y' },
+    { viewValue: '1Y', value: '1y' },
+    { viewValue: 'YTD', value: 'ytd' },
+    { viewValue: '6M', value: '6m' },
+    { viewValue: '3M', value: '3m' },
+    { viewValue: '1M', value: '1m' }
   ];
 
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
+
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
       period: [null, Validators.required]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.stockPickerForm.get('symbol').valueChanges.subscribe(res => {
+      this.clickEvent(this.timePeriods[3]);
+    });
+  }
 
   fetchQuote() {
     if (this.stockPickerForm.valid) {
@@ -40,4 +47,11 @@ export class StocksComponent implements OnInit {
       this.priceQuery.fetchQuote(symbol, period);
     }
   }
+
+  clickEvent(timePeriod) {
+    this.selectedValue = timePeriod.value;
+    this.stockPickerForm.patchValue({ period: this.selectedValue });
+    this.fetchQuote();
+  }
+
 }
