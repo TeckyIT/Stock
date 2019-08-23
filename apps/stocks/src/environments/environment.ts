@@ -6,7 +6,7 @@ import { StocksAppConfig } from '@coding-challenge/stocks/data-access-app-config
 
 export const environment: StocksAppConfig = {
   production: false,
-  apiKey: '',
+  apiKey: 'Tpk_10d5e18e50d94d2f89d6962874310f56',
   apiURL: 'https://sandbox.iexapis.com'
 };
 

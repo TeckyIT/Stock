@@ -31,9 +31,9 @@ export class ChartComponent implements OnInit {
       type: 'LineChart',
       data: [],
       columnNames: ['period', 'close'],
-      options: { title: `Stock price`, width: '600', height: '400' }
+      options: { title: `Stock price`, width: '900', height: '500' }
     };
 
-    this.data$.subscribe(newData => (this.chartData = newData));
+    this.data$.subscribe(newData => (this.chart.data = newData));
   }
 }
