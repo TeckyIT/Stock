@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 })
 export class ChartComponent implements OnInit {
   @Input() data$: Observable<any>;
-  chartData: any;
+  @Input() symbol$: Observable<any>;
 
   chart: {
     title: string;
@@ -23,9 +23,16 @@ export class ChartComponent implements OnInit {
     columnNames: string[];
     options: any;
   };
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this.symbol$.subscribe((symbol: string) => {
+      if (this.chart) {
+        this.chart.options.title = symbol.toUpperCase() + ` Stock price`
+      }
+    });
+
     this.chart = {
       title: '',
       type: 'LineChart',

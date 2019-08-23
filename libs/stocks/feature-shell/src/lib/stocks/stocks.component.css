@@ -6,3 +6,13 @@ mat-form-field {
   border-bottom: #cec7c7;
   border-bottom-style: solid;
 }
+
+.date-range,
+.buttons-date-container {
+  display: flex;
+}
+
+.date-range mat-form-field {
+  margin-right: 12px;
+  width: 120px;
+}

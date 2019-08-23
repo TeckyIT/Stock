@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import * as moment from "moment";
 
 @Component({
   selector: 'coding-challenge-stocks',
@@ -14,6 +15,7 @@ export class StocksComponent implements OnInit {
   selectedValue: string;
   quotes$ = this.priceQuery.priceQueries$;
   selectedSymbol$ = this.priceQuery.selectedSymbol$;
+  maxDate: Date;
 
   timePeriods = [
     { viewValue: 'Max', value: 'max' },
@@ -26,32 +28,58 @@ export class StocksComponent implements OnInit {
     { viewValue: '1M', value: '1m' }
   ];
 
+  isSelected: boolean = false;
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
-
+    this.maxDate = new Date();
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      period: [null, Validators.required],
+      fromDate: null,
+      toDate: null
     });
   }
 
   ngOnInit() {
-
     this.stockPickerForm.get('symbol').valueChanges.subscribe(res => {
-      this.clickEvent(this.timePeriods[3]);
+      debugger;
+      const { fromDate, toDate } = this.stockPickerForm.value;
+      if (fromDate && toDate) {
+        this.dateChange();
+      } else {
+        this.clickEvent(this.timePeriods[3]);
+      }
     });
   }
 
   fetchQuote() {
     if (this.stockPickerForm.valid) {
       const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+      if (symbol) {
+        this.priceQuery.fetchQuote(symbol, period);
+      }
     }
   }
 
   clickEvent(timePeriod) {
     this.selectedValue = timePeriod.value;
-    this.stockPickerForm.patchValue({ period: this.selectedValue });
+    this.stockPickerForm.patchValue({ period: this.selectedValue, fromDate: null, toDate: null });
     this.fetchQuote();
+  }
+
+  dateChange() {
+    const { fromDate, toDate } = this.stockPickerForm.value;
+    let symbol = this.stockPickerForm.get('symbol').value;
+    if (fromDate && toDate) {
+      let _fromDate = moment(new Date(fromDate), "yyyy-mm-dd");
+      let _toDate = moment(new Date(toDate), "yyyy-mm-dd");
+      if (symbol && _fromDate.valueOf() <= _toDate.valueOf()) {
+        let period = this.timePeriods[0].value;
+        this.selectedValue = '';
+        this.priceQuery.fetchQuote(symbol, period, fromDate, toDate);
+      } else if (_fromDate.valueOf() > _toDate.valueOf()) {
+        this.stockPickerForm.patchValue({ fromDate: toDate });
+      }
+    }
   }
 
 }
