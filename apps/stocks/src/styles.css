@@ -1,2 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+body {
+    text-align: center;
+    border-top: #cec7c7 10px solid;
+    margin-top: 0;
+}
+
+form {
+    display: inline-block;
+}
