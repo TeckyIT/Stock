@@ -7,10 +7,28 @@
     </mat-error>
   </mat-form-field>
 
-  <div>
+  <div class="buttons-date-container">
+    <div class="date-range">
+      <mat-form-field color="accent">
+        <mat-label>From</mat-label>
+        <input matInput [max]="maxDate" [matDatepicker]="fromDate" formControlName="fromDate" (dateInput)="dateChange()"
+          (dateChange)="dateChange()">
+        <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+        <mat-datepicker #fromDate color="primary"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field color="accent">
+        <mat-label>To</mat-label>
+        <input matInput [max]="maxDate" [matDatepicker]="toDate" formControlName="toDate" (dateInput)="dateChange()"
+          (dateChange)="dateChange()">
+        <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+        <mat-datepicker #toDate color="primary"></mat-datepicker>
+      </mat-form-field>
+    </div>
+
     <button (click)="clickEvent(timePeriod)" [ngClass]="{selected: selectedValue ===  timePeriod.value }"
       *ngFor="let timePeriod of timePeriods" mat-button>{{timePeriod.viewValue}}</button>
   </div>
 
-  <coding-challenge-chart [data$]="quotes$" ></coding-challenge-chart>
+  <coding-challenge-chart [data$]="quotes$" [symbol$]="selectedSymbol$"></coding-challenge-chart>
 </form>
