@@ -22,12 +22,9 @@ export class PriceQueryEffects {
     PriceQueryActionTypes.FetchPriceQuery,
     {
       run: (action: FetchPriceQuery, state: PriceQueryPartialState) => {
+        let encodeApiUrl = encodeURIComponent(`${this.env.apiURL}`);
         return this.httpClient
-          .get(
-            `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${
-              action.period
-            }?token=${this.env.apiKey}`
-          )
+          .get(`api/stocks/${encodeApiUrl}/${action.symbol}/${action.period}/${this.env.apiKey}`)
           .pipe(
             map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
           );
@@ -43,5 +40,5 @@ export class PriceQueryEffects {
     @Inject(StocksAppConfigToken) private env: StocksAppConfig,
     private httpClient: HttpClient,
     private dataPersistence: DataPersistence<PriceQueryPartialState>
-  ) {}
+  ) { }
 }
