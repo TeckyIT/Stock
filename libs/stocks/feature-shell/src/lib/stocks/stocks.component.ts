@@ -41,7 +41,6 @@ export class StocksComponent implements OnInit {
 
   ngOnInit() {
     this.stockPickerForm.get('symbol').valueChanges.subscribe(res => {
-      debugger;
       const { fromDate, toDate } = this.stockPickerForm.value;
       if (fromDate && toDate) {
         this.dateChange();
